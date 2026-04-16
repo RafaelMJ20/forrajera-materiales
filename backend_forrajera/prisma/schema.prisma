@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Categoría de productos
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  description String?
+  active    Int       @default(1) // 1 = activo, 0 = eliminado (borrado lógico)
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("categories")
+}
+
+// Producto
+model Product {
+  id              Int       @id @default(autoincrement())
+  name            String
+  categoryId      Int
+  category        Category  @relation(fields: [categoryId], references: [id])
+  purchasePrice   Float     // Precio de compra
+  salePrice       Float     // Precio de venta
+  currentStock    Float     // Stock actual
+  minimumStock    Float     // Stock mínimo para alertas
+  unit            String    // Unidad de medida (pieza, kilo, litro, costal, etc.)
+  photo           String?   // URL o ruta de la foto
+  active          Int       @default(1) // 1 = activo, 0 = eliminado (borrado lógico)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("products")
+}
+
