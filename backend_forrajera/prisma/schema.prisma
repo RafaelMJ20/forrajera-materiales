@@ -35,9 +35,41 @@ model Product {
   unit            String    // Unidad de medida (pieza, kilo, litro, costal, etc.)
   photo           String?   // URL o ruta de la foto
   active          Int       @default(1) // 1 = activo, 0 = eliminado (borrado lógico)
+  saleItems       SaleItem[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
   @@map("products")
 }
+
+// Venta
+model Sale {
+  id        Int         @id @default(autoincrement())
+  saleDate  DateTime    @default(now())
+  notes     String?     // Notas opcionales (nombre del cliente, observaciones)
+  total     Float       // Total de la venta
+  gain      Float       // Ganancia total (suma de ganancias de cada producto)
+  items     SaleItem[]  // Ítems de la venta
+  active    Int         @default(1) // 1 = activo, 0 = eliminado (borrado lógico)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("sales")
+}
+
+// Ítems de venta (detalle de cada producto vendido)
+model SaleItem {
+  id          Int     @id @default(autoincrement())
+  saleId      Int
+  sale        Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId   Int
+  product     Product @relation(fields: [productId], references: [id])
+  quantity    Float   // Cantidad vendida
+  unitPrice   Float   // Precio unitario al momento de la venta
+  subtotal    Float   // Subtotal del ítem (quantity * unitPrice)
+  gain        Float   // Ganancia del ítem (quantity * (salePrice - purchasePrice))
+
+  @@map("sale_items")
+}
+
 

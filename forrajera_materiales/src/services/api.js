@@ -105,3 +105,66 @@ export const productService = {
     return response.json();
   },
 };
+
+// Ventas
+export const saleService = {
+  getAll: async (filters = {}) => {
+    const params = new URLSearchParams();
+    if (filters.startDate) params.append("startDate", filters.startDate);
+    if (filters.endDate) params.append("endDate", filters.endDate);
+
+    const response = await fetch(
+      `${API_BASE_URL}/sales?${params.toString()}`
+    );
+    if (!response.ok) throw new Error("Error fetching sales");
+    return response.json();
+  },
+
+  getById: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/sales/${id}`);
+    if (!response.ok) throw new Error("Error fetching sale");
+    return response.json();
+  },
+
+  getByDateRange: async (startDate, endDate) => {
+    const params = new URLSearchParams({
+      startDate,
+      endDate,
+    });
+    const response = await fetch(`${API_BASE_URL}/sales/range?${params.toString()}`);
+    if (!response.ok) throw new Error("Error fetching sales by date range");
+    return response.json();
+  },
+
+  getByPeriod: async (period, date) => {
+    const params = new URLSearchParams();
+    if (date) params.append("date", date);
+
+    const response = await fetch(
+      `${API_BASE_URL}/sales/period/${period}?${params.toString()}`
+    );
+    if (!response.ok) throw new Error("Error fetching sales by period");
+    return response.json();
+  },
+
+  create: async (data) => {
+    const response = await fetch(`${API_BASE_URL}/sales`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Error creating sale");
+    }
+    return response.json();
+  },
+
+  delete: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/sales/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Error deleting sale");
+    return response.json();
+  },
+};

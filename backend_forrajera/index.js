@@ -8,6 +8,7 @@ import pg from "pg";
 // Importar rutas
 import categoryRoutes from "./src/routes/categoryRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
+import { saleRoutes } from "./src/routes/saleRoutes.js";
 
 const { Pool } = pg;
 
@@ -27,7 +28,7 @@ export const prisma = new PrismaClient({
 
 // Conectar a la base de datos
 await prisma.$connect()
-  .then(() => console.log("✅ Prisma conectado a la BD"))
+  .then(() => console.log("Prisma conectado a la BD"))
   .catch((err) => {
     console.error("❌ Error conectando a la BD:", err);
     process.exit(1);
@@ -62,13 +63,15 @@ app.get("/api/test-db", async (req, res) => {
 // Rutas de API
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/sales", saleRoutes);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📊 Test DB: http://localhost:${PORT}/api/test-db`);
-  console.log(`📦 Categories: http://localhost:${PORT}/api/categories`);
-  console.log(`🛍️  Products: http://localhost:${PORT}/api/products`);
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Test DB: http://localhost:${PORT}/api/test-db`);
+  console.log(`Categories: http://localhost:${PORT}/api/categories`);
+  console.log(`Products: http://localhost:${PORT}/api/products`);
+  console.log(`Sales: http://localhost:${PORT}/api/sales`);
 });
 
 // Graceful shutdown

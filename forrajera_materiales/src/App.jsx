@@ -3,6 +3,8 @@ import { Layout } from './components/Layout.jsx';
 import { ProductsPage } from './components/Inventory/ProductsPage.jsx';
 import { CategoriesPage } from './components/Inventory/CategoriesPage.jsx';
 import { LowStockPage } from './components/Inventory/LowStockPage.jsx';
+import { SalesPage } from './components/Sales/SalesPage.jsx';
+import { SalesHistoryPage } from './components/Sales/SalesHistoryPage.jsx';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -26,6 +28,10 @@ function App() {
         return <CategoriesPage />;
       case 'low-stock':
         return <LowStockPage />;
+      case 'sales':
+        return <SalesPage />;
+      case 'sales-history':
+        return <SalesHistoryPage />;
       case 'products':
       default:
         return <ProductsPage />;

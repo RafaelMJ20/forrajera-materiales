@@ -24,10 +24,32 @@ export const Layout = ({ children }) => {
         </div>
 
         <nav className="p-4 space-y-2">
+          {/* Inventario */}
+          <div className="px-4 py-2">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Inventario</p>
+          </div>
           {[
             { name: "Categorías", icon: "🏷️", href: "#categories" },
             { name: "Productos", icon: "📦", href: "#products" },
             { name: "Stock Bajo", icon: "⚠️", href: "#low-stock" },
+          ].map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800 transition text-sm font-medium"
+            >
+              <span className="text-xl">{item.icon}</span>
+              {isSidebarOpen && <span>{item.name}</span>}
+            </a>
+          ))}
+
+          {/* Ventas */}
+          <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ventas</p>
+          </div>
+          {[
+            { name: "Nueva Venta", icon: "💳", href: "#sales" },
+            { name: "Historial", icon: "📊", href: "#sales-history" },
           ].map((item) => (
             <a
               key={item.name}
