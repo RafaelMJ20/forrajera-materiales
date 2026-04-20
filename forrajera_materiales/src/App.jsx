@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Layout } from './components/Layout.jsx';
+import { DashboardPage } from './components/Dashboard/DashboardPage.jsx';
 import { ProductsPage } from './components/Inventory/ProductsPage.jsx';
 import { CategoriesPage } from './components/Inventory/CategoriesPage.jsx';
 import { LowStockPage } from './components/Inventory/LowStockPage.jsx';
@@ -9,7 +10,7 @@ import { ReportsPage } from './components/Reports/ReportsPage.jsx';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
-    const hash = window.location.hash.slice(1) || 'products';
+    const hash = window.location.hash.slice(1) || 'dashboard';
     return hash;
   });
 
@@ -25,6 +26,8 @@ function App() {
 
   const renderPage = () => {
     switch (currentPage) {
+      case 'dashboard':
+        return <DashboardPage />;
       case 'categories':
         return <CategoriesPage />;
       case 'low-stock':

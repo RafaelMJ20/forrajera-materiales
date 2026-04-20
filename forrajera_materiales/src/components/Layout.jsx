@@ -24,8 +24,25 @@ export const Layout = ({ children }) => {
         </div>
 
         <nav className="p-4 space-y-2">
-          {/* Inventario */}
+          {/* Dashboard */}
           <div className="px-4 py-2">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Principal</p>
+          </div>
+          {[
+            { name: "Dashboard", icon: "📊", href: "#dashboard" },
+          ].map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-gray-800 transition text-sm font-medium"
+            >
+              <span className="text-xl">{item.icon}</span>
+              {isSidebarOpen && <span>{item.name}</span>}
+            </a>
+          ))}
+
+          {/* Inventario */}
+          <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Inventario</p>
           </div>
           {[

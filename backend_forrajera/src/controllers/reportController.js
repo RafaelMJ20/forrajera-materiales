@@ -332,4 +332,106 @@ export const reportController = {
       res.status(500).json({ error: "Error al generar dashboard" });
     }
   },
+
+  // Tendencia Diaria de Ventas (últimos 7, 15 o 30 días)
+  async getDailyTrend(req, res) {
+    try {
+      const days = parseInt(req.query.days) || 30;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - days);
+
+      const sales = await req.prisma.sale.findMany({
+        where: {
+          active: 1,
+          saleDate: {
+            gte: startDate,
+            lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+          },
+        },
+        include: {
+          items: true,
+        },
+      });
+
+      // Agrupar por día
+      const dailyData = {};
+      for (let i = 0; i < days; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        const dateStr = date.toISOString().split("T")[0];
+        dailyData[dateStr] = { sales: 0, revenue: 0, gain: 0 };
+      }
+
+      sales.forEach((sale) => {
+        const dateStr = sale.saleDate.toISOString().split("T")[0];
+        if (dailyData[dateStr]) {
+          dailyData[dateStr].sales += 1;
+          dailyData[dateStr].revenue += sale.total;
+          dailyData[dateStr].gain += sale.gain;
+        }
+      });
+
+      const data = Object.entries(dailyData).map(([date, values]) => ({
+        date,
+        ...values,
+      }));
+
+      res.json({ data, period: days });
+    } catch (error) {
+      console.error("Error al obtener tendencia diaria:", error);
+      res.status(500).json({ error: "Error al obtener tendencia diaria" });
+    }
+  },
+
+  // Tendencia Mensual de Ganancias
+  async getMonthlyTrend(req, res) {
+    try {
+      const months = parseInt(req.query.months) || 12;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const startDate = new Date(today.getFullYear(), today.getMonth() - months, 1);
+
+      const sales = await req.prisma.sale.findMany({
+        where: {
+          active: 1,
+          saleDate: {
+            gte: startDate,
+            lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+          },
+        },
+      });
+
+      // Agrupar por mes
+      const monthlyData = {};
+      for (let i = 0; i < months; i++) {
+        const date = new Date(startDate);
+        date.setMonth(startDate.getMonth() + i);
+        const monthStr = date.toISOString().slice(0, 7); // YYYY-MM
+        monthlyData[monthStr] = { revenue: 0, gain: 0, sales: 0 };
+      }
+
+      sales.forEach((sale) => {
+        const monthStr = sale.saleDate.toISOString().slice(0, 7);
+        if (monthlyData[monthStr]) {
+          monthlyData[monthStr].revenue += sale.total;
+          monthlyData[monthStr].gain += sale.gain;
+          monthlyData[monthStr].sales += 1;
+        }
+      });
+
+      const data = Object.entries(monthlyData).map(([month, values]) => ({
+        month,
+        ...values,
+      }));
+
+      res.json({ data, months });
+    } catch (error) {
+      console.error("Error al obtener tendencia mensual:", error);
+      res.status(500).json({ error: "Error al obtener tendencia mensual" });
+    }
+  },
 };

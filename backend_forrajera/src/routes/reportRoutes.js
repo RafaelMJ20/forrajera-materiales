@@ -12,4 +12,8 @@ router.get("/gains", reportController.getGainsReport);
 router.get("/products", reportController.getProductsReport);
 router.get("/inventory", reportController.getInventoryValue);
 
+// Tendencias para gráficas
+router.get("/daily-trend", reportController.getDailyTrend);
+router.get("/monthly-trend", reportController.getMonthlyTrend);
+
 export { router as reportRoutes };

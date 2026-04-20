@@ -200,4 +200,16 @@ export const reportService = {
     if (!response.ok) throw new Error("Error fetching inventory report");
     return response.json();
   },
+
+  getDailyTrend: async (days = 30) => {
+    const response = await fetch(`${API_BASE_URL}/reports/daily-trend?days=${days}`);
+    if (!response.ok) throw new Error("Error fetching daily trend");
+    return response.json();
+  },
+
+  getMonthlyTrend: async (months = 12) => {
+    const response = await fetch(`${API_BASE_URL}/reports/monthly-trend?months=${months}`);
+    if (!response.ok) throw new Error("Error fetching monthly trend");
+    return response.json();
+  },
 };
