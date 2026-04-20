@@ -168,3 +168,36 @@ export const saleService = {
     return response.json();
   },
 };
+
+// Reportes
+export const reportService = {
+  getDashboard: async () => {
+    const response = await fetch(`${API_BASE_URL}/reports/dashboard`);
+    if (!response.ok) throw new Error("Error fetching dashboard");
+    return response.json();
+  },
+
+  getSalesReport: async () => {
+    const response = await fetch(`${API_BASE_URL}/reports/sales`);
+    if (!response.ok) throw new Error("Error fetching sales report");
+    return response.json();
+  },
+
+  getGainsReport: async () => {
+    const response = await fetch(`${API_BASE_URL}/reports/gains`);
+    if (!response.ok) throw new Error("Error fetching gains report");
+    return response.json();
+  },
+
+  getProductsReport: async () => {
+    const response = await fetch(`${API_BASE_URL}/reports/products`);
+    if (!response.ok) throw new Error("Error fetching products report");
+    return response.json();
+  },
+
+  getInventoryReport: async () => {
+    const response = await fetch(`${API_BASE_URL}/reports/inventory`);
+    if (!response.ok) throw new Error("Error fetching inventory report");
+    return response.json();
+  },
+};
