@@ -28,8 +28,7 @@ export const ProductsPage = () => {
     salePrice: "",
     currentStock: "",
     minimumStock: "",
-    unit: "",
-    photo: "",
+    unit: "kg",
   });
 
   // Cargar datos iniciales
@@ -69,8 +68,7 @@ export const ProductsPage = () => {
         salePrice: product.salePrice,
         currentStock: product.currentStock,
         minimumStock: product.minimumStock,
-        unit: product.unit,
-        photo: product.photo || "",
+        unit: product.unit || "kg",
       });
     } else {
       setEditingProduct(null);
@@ -81,8 +79,7 @@ export const ProductsPage = () => {
         salePrice: "",
         currentStock: "",
         minimumStock: "",
-        unit: "",
-        photo: "",
+        unit: "kg",
       });
     }
     setIsModalOpen(true);
@@ -300,18 +297,15 @@ export const ProductsPage = () => {
             onChange={(e) => setFormData({ ...formData, minimumStock: e.target.value })}
             required
           />
-          <Input
+          <Select
             label="Unidad de Medida"
-            placeholder="Ej: kg, litro, pieza"
             value={formData.unit}
             onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+            options={[
+              { value: "kg", label: "Kilogramo" },
+              { value: "pieza", label: "Pieza" },
+            ]}
             required
-          />
-          <Input
-            label="URL de Foto (Opcional)"
-            type="url"
-            value={formData.photo}
-            onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
           />
         </div>
       </Modal>

@@ -213,3 +213,184 @@ export const reportService = {
     return response.json();
   },
 };
+
+// Vehículos
+export const vehicleService = {
+  getAll: async () => {
+    const response = await fetch(`${API_BASE_URL}/vehicles`);
+    if (!response.ok) throw new Error("Error fetching vehicles");
+    return response.json();
+  },
+
+  getById: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/vehicles/${id}`);
+    if (!response.ok) throw new Error("Error fetching vehicle");
+    return response.json();
+  },
+
+  getStats: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/vehicles/stats/${id}`);
+    if (!response.ok) throw new Error("Error fetching vehicle stats");
+    return response.json();
+  },
+
+  create: async (data) => {
+    const response = await fetch(`${API_BASE_URL}/vehicles`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Error creating vehicle");
+    }
+    return response.json();
+  },
+
+  update: async (id, data) => {
+    const response = await fetch(`${API_BASE_URL}/vehicles/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error("Error updating vehicle");
+    return response.json();
+  },
+
+  delete: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/vehicles/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Error deleting vehicle");
+    return response.json();
+  },
+};
+
+// Combustible
+export const fuelService = {
+  getAll: async (vehicleId) => {
+    const params = vehicleId ? `?vehicleId=${vehicleId}` : "";
+    const response = await fetch(`${API_BASE_URL}/fuel${params}`);
+    if (!response.ok) throw new Error("Error fetching fuel logs");
+    return response.json();
+  },
+
+  getById: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/fuel/${id}`);
+    if (!response.ok) throw new Error("Error fetching fuel log");
+    return response.json();
+  },
+
+  getExpensesByPeriod: async (vehicleId, period = "month") => {
+    const params = new URLSearchParams();
+    params.append("period", period);
+    if (vehicleId) params.append("vehicleId", vehicleId);
+    const response = await fetch(`${API_BASE_URL}/fuel/expenses/by-period?${params}`);
+    if (!response.ok) throw new Error("Error fetching expenses by period");
+    return response.json();
+  },
+
+  getExpensesByVehicle: async (month) => {
+    const params = month ? `?month=${month}` : "";
+    const response = await fetch(`${API_BASE_URL}/fuel/expenses/by-vehicle${params}`);
+    if (!response.ok) throw new Error("Error fetching expenses by vehicle");
+    return response.json();
+  },
+
+  create: async (data) => {
+    const response = await fetch(`${API_BASE_URL}/fuel`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Error creating fuel log");
+    }
+    return response.json();
+  },
+
+  update: async (id, data) => {
+    const response = await fetch(`${API_BASE_URL}/fuel/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error("Error updating fuel log");
+    return response.json();
+  },
+
+  delete: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/fuel/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Error deleting fuel log");
+    return response.json();
+  },
+};
+
+// Mantenimiento
+export const maintenanceService = {
+  getAll: async (vehicleId) => {
+    const params = vehicleId ? `?vehicleId=${vehicleId}` : "";
+    const response = await fetch(`${API_BASE_URL}/maintenance${params}`);
+    if (!response.ok) throw new Error("Error fetching maintenance logs");
+    return response.json();
+  },
+
+  getById: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/maintenance/${id}`);
+    if (!response.ok) throw new Error("Error fetching maintenance log");
+    return response.json();
+  },
+
+  getByVehicle: async (vehicleId) => {
+    const response = await fetch(`${API_BASE_URL}/maintenance/by-vehicle/${vehicleId}`);
+    if (!response.ok) throw new Error("Error fetching vehicle maintenance history");
+    return response.json();
+  },
+
+  getUpcomingServices: async () => {
+    const response = await fetch(`${API_BASE_URL}/maintenance/upcoming`);
+    if (!response.ok) throw new Error("Error fetching upcoming services");
+    return response.json();
+  },
+
+  getSummary: async (month) => {
+    const params = month ? `?month=${month}` : "";
+    const response = await fetch(`${API_BASE_URL}/maintenance/summary${params}`);
+    if (!response.ok) throw new Error("Error fetching maintenance summary");
+    return response.json();
+  },
+
+  create: async (data) => {
+    const response = await fetch(`${API_BASE_URL}/maintenance`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Error creating maintenance log");
+    }
+    return response.json();
+  },
+
+  update: async (id, data) => {
+    const response = await fetch(`${API_BASE_URL}/maintenance/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error("Error updating maintenance log");
+    return response.json();
+  },
+
+  delete: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/maintenance/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Error deleting maintenance log");
+    return response.json();
+  },
+};

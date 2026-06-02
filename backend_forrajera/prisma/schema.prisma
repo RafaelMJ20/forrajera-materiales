@@ -72,4 +72,60 @@ model SaleItem {
   @@map("sale_items")
 }
 
+// Vehículo
+model Vehicle {
+  id                Int            @id @default(autoincrement())
+  brand             String         // Marca (Toyota, Ford, etc.)
+  model             String         // Modelo (Hilux, F150, etc.)
+  licensePlate      String         @unique // Placas únicas
+  year              Int            // Año del vehículo
+  type              String         // Tipo (camioneta, camión, auto, etc.)
+  expectedFuelEfficiency Float       // Rendimiento esperado (km/litro)
+  photo             String?        // URL o ruta de la foto
+  active            Int            @default(1) // 1 = activo, 0 = eliminado
+  fuelLogs          FuelLog[]      // Registros de combustible
+  maintenanceLogs   MaintenanceLog[] // Registros de mantenimiento
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@map("vehicles")
+}
+
+// Registro de carga de combustible
+model FuelLog {
+  id                Int       @id @default(autoincrement())
+  vehicleId         Int
+  vehicle           Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  fuelDate          DateTime  @default(now())
+  litersLoaded      Float     // Litros cargados
+  costTotal         Float     // Costo total de la carga
+  currentMileage    Float     // Kilometraje al momento de cargar
+  gasStation        String?   // Gasolinera donde cargó
+  driver            String?   // Chofer responsable (opcional)
+  notes             String?   // Notas adicionales
+  active            Int       @default(1) // 1 = activo, 0 = eliminado
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("fuel_logs")
+}
+
+// Registro de mantenimiento
+model MaintenanceLog {
+  id                Int       @id @default(autoincrement())
+  vehicleId         Int
+  vehicle           Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  maintenanceDate   DateTime  @default(now())
+  serviceType       String    // Tipo de servicio (cambio de aceite, mantenimiento general, etc.)
+  mileage           Float?    // Kilometraje al momento del servicio
+  cost              Float?    // Costo del servicio
+  notes             String?   // Notas detalladas
+  nextServiceDate   DateTime? // Próximo servicio recomendado
+  active            Int       @default(1) // 1 = activo, 0 = eliminado
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("maintenance_logs")
+}
+
 

@@ -10,6 +10,9 @@ import categoryRoutes from "./src/routes/categoryRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
 import { saleRoutes } from "./src/routes/saleRoutes.js";
 import { reportRoutes } from "./src/routes/reportRoutes.js";
+import { vehicleRoutes } from "./src/routes/vehicleRoutes.js";
+import { fuelRoutes } from "./src/routes/fuelRoutes.js";
+import { maintenanceRoutes } from "./src/routes/maintenanceRoutes.js";
 
 const { Pool } = pg;
 
@@ -66,15 +69,21 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/sales", saleRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/vehicles", vehicleRoutes);
+app.use("/api/fuel", fuelRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📊 Test DB: http://localhost:${PORT}/api/test-db`);
-  console.log(`📦 Categories: http://localhost:${PORT}/api/categories`);
-  console.log(`🛍️  Products: http://localhost:${PORT}/api/products`);
-  console.log(`💰 Sales: http://localhost:${PORT}/api/sales`);
-  console.log(`📈 Reports: http://localhost:${PORT}/api/reports`);
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Test DB: http://localhost:${PORT}/api/test-db`);
+  console.log(`Categories: http://localhost:${PORT}/api/categories`);
+  console.log(`Products: http://localhost:${PORT}/api/products`);
+  console.log(`Sales: http://localhost:${PORT}/api/sales`);
+  console.log(`Reports: http://localhost:${PORT}/api/reports`);
+  console.log(`Vehicles: http://localhost:${PORT}/api/vehicles`);
+  console.log(`Fuel: http://localhost:${PORT}/api/fuel`);
+  console.log(`Maintenance: http://localhost:${PORT}/api/maintenance`);
 });
 
 // Graceful shutdown

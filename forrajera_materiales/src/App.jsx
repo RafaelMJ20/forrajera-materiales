@@ -7,6 +7,10 @@ import { LowStockPage } from './components/Inventory/LowStockPage.jsx';
 import { SalesPage } from './components/Sales/SalesPage.jsx';
 import { SalesHistoryPage } from './components/Sales/SalesHistoryPage.jsx';
 import { ReportsPage } from './components/Reports/ReportsPage.jsx';
+import { VehiclesPage } from './components/Vehicles/VehiclesPage.jsx';
+import { FuelLogsPage } from './components/Vehicles/FuelLogsPage.jsx';
+import { MaintenancePage } from './components/Vehicles/MaintenancePage.jsx';
+import { VehicleReportsPage } from './components/Vehicles/VehicleReportsPage.jsx';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
@@ -38,6 +42,14 @@ function App() {
         return <SalesHistoryPage />;
       case 'reports':
         return <ReportsPage />;
+      case 'vehicles':
+        return <VehiclesPage />;
+      case 'fuel':
+        return <FuelLogsPage />;
+      case 'maintenance':
+        return <MaintenancePage />;
+      case 'vehicle-reports':
+        return <VehicleReportsPage />;
       case 'products':
       default:
         return <ProductsPage />;
