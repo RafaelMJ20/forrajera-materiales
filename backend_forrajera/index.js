@@ -5,7 +5,11 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 
+// Importar middlewares de seguridad
+import { loginLimiter, apiLimiter, strictLimiter } from "./src/middleware/rateLimitMiddleware.js";
+
 // Importar rutas
+import authRoutes from "./src/routes/authRoutes.js";
 import categoryRoutes from "./src/routes/categoryRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
 import { saleRoutes } from "./src/routes/saleRoutes.js";
@@ -42,6 +46,9 @@ await prisma.$connect()
 app.use(cors());
 app.use(express.json());
 
+// Aplicar rate limiting general a toda la API
+app.use("/api/", apiLimiter);
+
 // Pasar prisma a través de req.app.locals
 app.use((req, res, next) => {
   req.prisma = prisma;
@@ -65,6 +72,7 @@ app.get("/api/test-db", async (req, res) => {
 });
 
 // Rutas de API
+app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/sales", saleRoutes);
@@ -77,6 +85,7 @@ app.use("/api/maintenance", maintenanceRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Test DB: http://localhost:${PORT}/api/test-db`);
+  console.log(`Auth: http://localhost:${PORT}/api/auth`);
   console.log(`Categories: http://localhost:${PORT}/api/categories`);
   console.log(`Products: http://localhost:${PORT}/api/products`);
   console.log(`Sales: http://localhost:${PORT}/api/sales`);

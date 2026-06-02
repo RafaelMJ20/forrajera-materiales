@@ -1,4 +1,6 @@
 import { useState, useCallback, memo } from "react";
+import { useUser } from "../context/UserContext.jsx";
+import Swal from "sweetalert2";
 
 const NavLink = memo(({ item, isSidebarOpen }) => (
   <a
@@ -39,12 +41,43 @@ const NAV_ITEMS = {
   ],
 };
 
+// Función para determinar si un rol puede acceder a una sección
+const canAccessSection = (role, section) => {
+  const roleAccess = {
+    admin: ["principal", "inventario", "ventas", "reportes", "vehiculos"],
+    vendedor: ["principal", "ventas", "reportes"],
+    consulta: ["principal", "reportes"],
+  };
+  return roleAccess[role]?.includes(section) ?? false;
+};
+
 export const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { user, logout } = useUser();
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen(prev => !prev);
   }, []);
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "¿Cerrar sesión?",
+      text: "¿Estás seguro de que deseas salir?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Sí, salir",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+        window.location.href = "/";
+      }
+    });
+  };
+
+  const userRole = user?.role || "consulta";
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -68,54 +101,74 @@ export const Layout = ({ children }) => {
 
         <nav className="p-4 space-y-2 overflow-y-auto">
           {/* Principal */}
-          {isSidebarOpen && (
-            <div className="px-4 py-2">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Principal</p>
-            </div>
+          {canAccessSection(userRole, "principal") && (
+            <>
+              {isSidebarOpen && (
+                <div className="px-4 py-2">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Principal</p>
+                </div>
+              )}
+              {NAV_ITEMS.principal.map((item) => (
+                <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
+              ))}
+            </>
           )}
-          {NAV_ITEMS.principal.map((item) => (
-            <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
-          ))}
 
           {/* Inventario */}
-          {isSidebarOpen && (
-            <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Inventario</p>
-            </div>
+          {canAccessSection(userRole, "inventario") && (
+            <>
+              {isSidebarOpen && (
+                <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Inventario</p>
+                </div>
+              )}
+              {NAV_ITEMS.inventario.map((item) => (
+                <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
+              ))}
+            </>
           )}
-          {NAV_ITEMS.inventario.map((item) => (
-            <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
-          ))}
 
           {/* Ventas */}
-          {isSidebarOpen && (
-            <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ventas</p>
-            </div>
+          {canAccessSection(userRole, "ventas") && (
+            <>
+              {isSidebarOpen && (
+                <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ventas</p>
+                </div>
+              )}
+              {NAV_ITEMS.ventas.map((item) => (
+                <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
+              ))}
+            </>
           )}
-          {NAV_ITEMS.ventas.map((item) => (
-            <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
-          ))}
 
           {/* Reportes */}
-          {isSidebarOpen && (
-            <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Reportes</p>
-            </div>
+          {canAccessSection(userRole, "reportes") && (
+            <>
+              {isSidebarOpen && (
+                <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Reportes</p>
+                </div>
+              )}
+              {NAV_ITEMS.reportes.map((item) => (
+                <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
+              ))}
+            </>
           )}
-          {NAV_ITEMS.reportes.map((item) => (
-            <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
-          ))}
 
           {/* Vehículos */}
-          {isSidebarOpen && (
-            <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Vehículos</p>
-            </div>
+          {canAccessSection(userRole, "vehiculos") && (
+            <>
+              {isSidebarOpen && (
+                <div className="px-4 py-2 mt-6 pt-6 border-t border-gray-800">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Vehículos</p>
+                </div>
+              )}
+              {NAV_ITEMS.vehiculos.map((item) => (
+                <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
+              ))}
+            </>
           )}
-          {NAV_ITEMS.vehiculos.map((item) => (
-            <NavLink key={item.name} item={item} isSidebarOpen={isSidebarOpen} />
-          ))}
         </nav>
       </aside>
 
@@ -125,11 +178,21 @@ export const Layout = ({ children }) => {
           <div className="px-8 py-4 flex justify-between items-center">
             <h2 className="text-lg font-semibold text-gray-900">Gestor de Inventario</h2>
             <div className="flex items-center gap-4">
-              <img
-                src="https://via.placeholder.com/40"
-                alt="Avatar"
-                className="w-10 h-10 rounded-full"
-              />
+              <div className="flex flex-col items-end">
+                <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+              </div>
+              <div className="w-px h-8 bg-gray-200"></div>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium rounded-lg transition"
+                title="Cerrar sesión"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Salir
+              </button>
             </div>
           </div>
         </header>

@@ -9,6 +9,20 @@ datasource db {
   provider = "postgresql"
 }
 
+// Usuario del sistema
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String    // Hash de contraseña (bcrypt)
+  name      String
+  role      String    @default("vendedor") // admin, vendedor, consulta
+  active    Int       @default(1) // 1 = activo, 0 = inactivo
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("users")
+}
+
 // Categoría de productos
 model Category {
   id        Int       @id @default(autoincrement())
@@ -127,5 +141,22 @@ model MaintenanceLog {
 
   @@map("maintenance_logs")
 }
+
+// Registro de auditoría (intentos de login, acciones críticas)
+model AuditLog {
+  id        Int       @id @default(autoincrement())
+  action    String    // Ej: "LOGIN_ATTEMPT", "LOGIN_SUCCESS", "LOGIN_FAILED", "PASSWORD_CHANGE", etc.
+  userId    Int?      // ID del usuario (null si login fallido)
+  email     String?   // Email usado en intento de login
+  ipAddress String?   // IP desde donde se realizó la acción
+  userAgent String?   // User-Agent del cliente
+  success   Boolean   @default(false) // Si la acción fue exitosa
+  reason    String?   // Razón del fallo (si aplica)
+  details   String?   // JSON con detalles adicionales
+  createdAt DateTime  @default(now())
+
+  @@map("audit_logs")
+}
+
 
 
