@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { authService } from "../../services/api.js";
 
 export const LoginPage = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -54,22 +55,7 @@ export const LoginPage = ({ onLogin }) => {
     try {
       setIsLoading(true);
 
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Credenciales inválidas");
-      }
+      const data = await authService.login(formData.email, formData.password);
 
       // Guardar token en localStorage
       localStorage.setItem("token", data.data.token);
