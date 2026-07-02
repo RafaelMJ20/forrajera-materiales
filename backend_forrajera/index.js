@@ -46,9 +46,6 @@ await prisma.$connect()
 app.use(cors());
 app.use(express.json());
 
-// Aplicar rate limiting general a toda la API
-app.use("/api/", apiLimiter);
-
 // Pasar prisma a través de req.app.locals
 app.use((req, res, next) => {
   req.prisma = prisma;
