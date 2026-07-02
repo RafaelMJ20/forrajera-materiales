@@ -20,20 +20,6 @@ export const loginLimiter = rateLimit({
   },
 });
 
-// Rate limiting general para API - máx 100 req por 15 minutos
-export const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "Demasiadas solicitudes desde esta IP. Intenta de nuevo más tarde.",
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (req, res) => {
-    res.status(429).json({
-      status: "error",
-      message: "Demasiadas solicitudes. Intenta de nuevo más tarde.",
-    });
-  },
-});
 
 // Rate limiting estricto para operaciones sensibles (register, cambio de contraseña)
 export const strictLimiter = rateLimit({
