@@ -6,7 +6,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 
 // Importar middlewares de seguridad
-import { loginLimiter, apiLimiter, strictLimiter } from "./src/middleware/rateLimitMiddleware.js";
+import { loginLimiter, strictLimiter } from "./src/middleware/rateLimitMiddleware.js";
 
 // Importar rutas
 import authRoutes from "./src/routes/authRoutes.js";
