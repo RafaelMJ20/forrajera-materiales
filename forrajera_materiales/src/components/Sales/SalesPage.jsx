@@ -41,8 +41,8 @@ export const SalesPage = () => {
     const existingItem = cartItems.find((item) => item.productId === product.id);
 
     if (existingItem) {
-      // Si ya existe, aumentar cantidad
-      updateCartItemQuantity(product.id, existingItem.quantity + 1);
+      // Si ya existe, aumentar cantidad en 0.1
+      updateCartItemQuantity(product.id, existingItem.quantity + 0.1);
     } else {
       // Agregar nuevo producto
       setCartItems([
@@ -50,7 +50,7 @@ export const SalesPage = () => {
         {
           productId: product.id,
           product,
-          quantity: 1,
+          quantity: 1.0,
           unitPrice: product.salePrice,
           subtotal: product.salePrice,
           gain: product.salePrice - product.purchasePrice,
@@ -62,14 +62,17 @@ export const SalesPage = () => {
 
   // Actualizar cantidad de item en carrito
   const updateCartItemQuantity = (productId, newQuantity) => {
-    if (newQuantity < 1) return;
+    // Convertir a número decimal
+    newQuantity = typeof newQuantity === "string" ? parseFloat(newQuantity) : newQuantity;
+    
+    if (isNaN(newQuantity) || newQuantity <= 0) return;
 
     const product = products.find((p) => p.id === productId);
     if (newQuantity > product.currentStock) {
       Swal.fire({
         icon: "warning",
         title: "Stock insuficiente",
-        text: `Solo hay ${product.currentStock} disponibles de ${product.name}`,
+        text: `Solo hay ${product.currentStock.toFixed(2)} disponibles de ${product.name}`,
       });
       return;
     }
@@ -274,7 +277,7 @@ export const SalesPage = () => {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() =>
-                            updateCartItemQuantity(item.productId, item.quantity - 1)
+                            updateCartItemQuantity(item.productId, item.quantity - 0.1)
                           }
                           className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded"
                         >
@@ -282,16 +285,17 @@ export const SalesPage = () => {
                         </button>
                         <input
                           type="number"
-                          min="1"
+                          min="0"
+                          step="0.01"
                           value={item.quantity}
                           onChange={(e) =>
-                            updateCartItemQuantity(item.productId, parseInt(e.target.value) || 1)
+                            updateCartItemQuantity(item.productId, parseFloat(e.target.value) || 0)
                           }
                           className="w-12 text-center border border-gray-300 rounded py-1"
                         />
                         <button
                           onClick={() =>
-                            updateCartItemQuantity(item.productId, item.quantity + 1)
+                            updateCartItemQuantity(item.productId, item.quantity + 0.1)
                           }
                           className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded"
                         >
